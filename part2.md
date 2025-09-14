@@ -67,4 +67,50 @@ Log in to the VM to verify that it has been provisioned correctly by SimpleVM.
    /usr/games/fortune | /usr/games/cowsay 
    ```
 
+### 2.2 Search for a genome 
+
+We will search for a genome in our dataset by using Mash. Mash needs first
+to index the genome via `mash sketch` and search for it in a metagenome dataset by using `mash screen`.
+We will plot a histogram on the terminal for a quick check.
+
+1. Let's download an example genome and dataset by running
+   ```
+   ncbi-genome-download -o output --flat-output  -s refseq -A GCF_000806805.2 bacteria -F fasta
+   ```
+   and
+   ```
+   wget https://openstack.cebitec.uni-bielefeld.de:8080/ftp.era.ebi.ac.uk/vol1/fastq/SRR398/008/SRR3984908/SRR3984908_1.fastq.gz
+   ```
+
+2. Create a mash sketch of the genome
+   ```
+   mash sketch output/GCF_000806805.2_ASM80680v2_genomic.fna.gz
+   ```
+   Check if the index is created
+   ```
+   ls -la output/GCF_000806805.2_ASM80680v2_genomic.fna.gz.msh
+   ```
+
+3. Check if a randomly chosen dataset contains our genome.  
+   ```
+   mash screen -p 2 output/GCF_000806805.2_ASM80680v2_genomic.fna.gz.msh SRR3984908_1.fastq.gz > out.txt
+   ```
+
+4. You can view the results by using cat. You will see that there is just one match.
+   ```
+   cat out.txt
+   ```
+
+### 2.3 Create a Snapshot
+
+Since your tools work as expected, you should now create a snapshot of your
+VM for later use. Before you do this, you should first stop your VM so that
+no data corruption appears. For this reason, please click on `Stop` in your VM dropdown. 
+Once your VM is stopped click on `Create Snapshot` in your VM dropdown.
+Please use your name without whitespace (Example: Max Mustermann -> MaxMusterman).
+The upload of your snapshot might take a few minutes.
+
+![](figures/snapshot.png)
+
+
 Back to [Section 1](part1.md) | Next to [Section 3](part3.md)
