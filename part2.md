@@ -1,17 +1,17 @@
 ## Section 2: Verify your VM properties and tools
 
 After the start of the machine has been triggered, some time may pass before the machine is available.
-As soon as this is the case, this becomes visible via a green icon.
+The machine is available once you see a green, non-blinking icon.
 
 Once the VM is available, you can use it for testing the tools and inspecting the data before
 you scale up your analysis in the next section.
 
 ### 2.1 Check your VM
 
-Log in to the VM and verify that SimpleVM provisioned the VM correctly.
+Log in to the VM to verify that it has been provisioned correctly by SimpleVM.
 
-1. Click on the Instances tab (Overview -> Instances). After you have initiated the start-up of the machine, you should have been automatically redirected there. Now open the "How to connect"
-   dropdown of your machine. Click on the Theia ide URL which opens a new browser tab.
+1. After you have initiated the start-up of the machine, you should have been automatically redirected to the **Instances** tab.
+   Now open the dropdown of your machine. Click on the Theia IDE URL which opens a new browser tab.
    ![](figures/howtoconnect.png)
 2. Click on `Terminal` in the upper menu and select `New Terminal`.
    ![](figures/terminal.png)
