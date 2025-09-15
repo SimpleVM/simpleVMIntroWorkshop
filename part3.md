@@ -1,49 +1,48 @@
 ## Section 3: Scale up your analysis
 
-In the first part you have tested the SimpleVM environment. 
-Now it is time for using a VM with more cores to scale up the analysis. 
-For this reason you have either saved your installed tools by creating a snapshot or, 
-if you are starting with this section, a snapshot has been prepared for you. 
-You will now reuse one of these snapshots with a larger flavor.
-Further, we will alos search for more metagenomic datasets via object storage
-and scale up our analysis by providing more cores to mash.
+In Parts 1 and 2, you tested the SimpleVM environment and the tools required for our analysis.
+Now it is time to use a VM with more cores to scale up the analysis. 
+
+In the previous part, you saved your installed tools by creating a snapshot.
+If the snapshot upload has not been completed, we have prepared a snapshot for you. You will now reuse this snapshot with a larger flavour.
+Next, we will search for more metagenomic datasets via object storage and scale up our analysis by allocating more cores.
 
 ### 3.1 Create a new VM based on your snapshot
 
-1. Click on `Overviews` -> `Snapshots` in left menu and check which status
+1. Click on **Snapshots** in left menu and check which status
    your snapshot has. You can also filter of the name in the top menu. 
-   If it has the status `active`, you can 
-   navigate to the `New Instance` tab (and select the SimpleVMIntro23 project).
+   If it has the status `active`, you can click on the snapshot to open the dropdown menu and click on start to spawn a new VM.
+   In case your snapshot is still not active just choose the **SimpleVMGCB** snapshot. You will now be redirected to the **Create new Instance** page with a
+   preselected snapshot.
+   ![](figures/snapshot_overview.png)
 
 2. Provide again a name for your instance.
+
 3. In the flavors sections please choose the **de.NBI large** flavor which has 28 cores available.
-   ![](figures/large_flavor.PNG)
+   ![](figures/large_flavor.png)
 
-   Click on the Snapshot tab to select the snapshot **SimpleVMIntro23**.
-   ![](figures/startsnap.png)
-
-5. Please create a volume for your VM and enter your name without whitespace 
+4. Please create a volume for your VM and enter your name without whitespace 
    (Example: Max Mustermann -> MaxMusterman) as the volume name. 
    Enter `data` (`/vol/data`) as mountpath and provide 1 GB as the storage size.
+   Don't forget to click on `Add Volume`. 
    ![](figures/createVolume.png)
 
-6. Grant again access to all project members with a `Cloud-portal-support` tag.
+5. Grant again access to all project members with a `Cloud-portal-support` tag.
    This way these members get ssh access to your VM and can help you in case
    something does not work as expected.
    ![](figures/grantAccess.png)
 
-7. Confirm the checkboxes and click on Start.
-   While the VM is starting please fill out our [user survey](https://cloud.denbi.de/survey/index.php/638945?lang=en).
+6. Confirm the checkbox and click on **Start Instance**.
+   ![](figures/start_instance.png)
 
-### 3.2 Interact with the SRA Mirror and search for more datasets to analyse
+### 3.2 Interact with the SRA Mirror and search for more datasets to analyze
 
-1. You are now on the `Instance Overview` page. You can delete your old VM which
-   we used to create your snapshot. To do this, open the action selection of the old machine again
-   by clicking on 'Show Actions' and select 'Delete VM'. Confirm the deletion of the machine.
+1. You are now on the **Instances** page. You can delete your old VM which is stopped and
+   we used to create your snapshot. To do this, open the dropdown of the old machine again
+   and select **Delete**. Confirm the deletion of the machine.
+   ![](figures/deleteOldVM.png)
    
-2. On your new VM, please click on `how to connect`.
-   You should see again a link. Please click on the link to open Theia-IDE on a new
-   browser tab.
+2. On your new VM, select again the link to access Theia IDE.
    ![](figures/howtoconnect.png)
 
 3. Click on `Terminal` in the upper menu and select `New Terminal`.
@@ -54,7 +53,7 @@ and scale up our analysis by providing more cores to mash.
    conda activate denbi
    ```
 
-6. Unfortunately, conda does not offer a minio cli binary,
+6. Unfortunately, Conda does not offer a minio cli binary,
    which means that we would have to install it manually.
    Download the binary:
    ```
@@ -71,7 +70,7 @@ and scale up our analysis by providing more cores to mash.
 
 7. Add S3 config for our public SRA mirror on our Bielefeld Cloud site:
    ```
-   mc config host add sra https://openstack.cebitec.uni-bielefeld.de:8080 "" ""
+   mc alias set sra https://openstack.cebitec.uni-bielefeld.de:8080 "" ""
    ```
 
 8. List which files are available for SRA number `SRR3984908`:
@@ -107,7 +106,7 @@ and scale up our analysis by providing more cores to mash.
 
 ### 3.3 Run commands with more cores and plot your result
 
-1. We created a mash index out of selected genomes that were classified as  
+1. We created a MASH index out of selected genomes that were classified as  
    "greatest threat to human health" by the World Health Organisation (WHO)
    in 2017: https://www.who.int/news/item/27-02-2017-who-publishes-list-of-bacteria-for-which-new-antibiotics-are-urgently-needed 
    Please download the index:
@@ -217,8 +216,11 @@ and scale up our analysis by providing more cores to mash.
     cp publications.tsv output.tsv /vol/data
     ```
 
-12. Go to the Instance Overview page. Click on actions and detach the volume.
-    ![](figures/detachvolume.png)
+12. Go to the **Instances** page and open the dropdown menu and click on the volume management button.
+    ![](figures/manageVolumeButton.png)
+
+    On the details page delete the VM.
+    ![](figures/detachVolumeButton.png)
 
 13. Finally, since you saved your output data you can safely delete the VM.
 
