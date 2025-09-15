@@ -1,72 +1,79 @@
-## Section 4: Inspect your generated data via a research environment
+## Section 4: Analyze the detected Microbiome 
 
-We now want to start a new VM. This time we would like to use RStudio 
-in order to inspect and visualize our results.
+In the previous part you found a dataset that contains the **Staphylococcus Aureus** strain. 
+We want now to try to assemble the metagenome and try to bin the strain in order to analyze the genes.
 
-### 4.1 Create a VM based on a Research Environment
+### 4.1 Prepare the Metagenomics-Toolkit run  
 
-1. Start a new VM. This time select again the de.NBI default flavor since
-   we do not need that much resources anymore.
+The Metagenomics-Toolkit will run the steps quality control, assembly, binnning and classification.
+Especially for the classification part we need a lot of storage in order to store the database.
 
-2. In the image tab please select Rstudio (`RStudio-ubuntu22.04`).
-   
-3. In the volume tab please choose the volume you created
-   in the previous part of the workshop.
-   Please use again `/vol/data` as mountpath. Click on `Add +` to add the volume.
-   ![](figures/reuseVolume.png)
+1. Extend the volume. Increase the volume size to 600 GB.
+   ![](figures/extendVolume.png)
 
-4. Grant again access to all project members with a `Cloud-portal-support` tag.
-   This way these members get ssh access to your VM and can help you in case
-   something does not work as expected.
-   ![](figures/grantAccess.png)
+2. Adjust the filesystem following the instructions in our wiki.
+   https://simplevm.denbi.de/wiki/simple_vm/volumes/#extend-a-volume
 
-5. Confirm all checkboxes and click on start.
-   Since it takes some time until the VM is started, please complete the last part of the
-   [unix tutorial](https://github.com/deNBI/unix-course#part-3-advanced-concepts) in the meantime.
-
-6. Again it will take some while to start the machine. On the instance overview, select `How to connect` of the newly started VM 
-   and click on the URL. A tab should be opened up in your browser.
-
-### 4.2 RStudio
-
-1. Login credentials for the RStudio user login are.
    ```
-   Username: ubuntu  
-   Password: simplevm
+   sudo resize2fs /dev/device_name
    ```
 
-2. In RStudio please open a Terminal first by either selecting the `Terminal` tab, or by clicking on
-   `Tools` -> `Terminal` -> `New Terminal`.
+3. Create database directory
 
-3. Download the Script by running wget:
    ```
-   wget https://openstack.cebitec.uni-bielefeld.de:8080/simplevm-workshop/analyse.Rmd
-   ```   
-   
-4. Further you have to install necessary R libraries. Please switch back
-   to the R console:
-   ![](figures/rconsole.png)
-   
-   Install the following libraries: 
+   mkdir /vol/database
    ```
-   install.packages(c("ggplot2","RColorBrewer","rmarkdown"))
+
+4. Download GTDB from our S3 storage using minio again. 
+
    ```
-5. You can now open the `analyse.Rmd` R notebook via `File` -> `Open File`.
+   mc cp --recursive sra/databases/gtdbtk_r226_v2_data/ /data/release226
+   ```
 
-6. You can now start the script by clicking on `Run` -> `Restart R and run all chunks`.
-  ![](figures/runRScript.png)
+5. Install Java 
 
-### 4.3 Provide your research data to a reviewer
+   ```
+   sudo apt install unzip default-jre 
+   ```
 
-Finally, you may want to publish your results once you are done with your research project.
-You could provide your data and tools via your snapshot and volumes to a reviewer,
-who could reproduce your results. Alternatively, you can also provide the Rmarkdown document 
-together with the input data to reproduce the last part of the analysis and the visualization.
+6. Install Nextflow
 
-You can share your research results via [Zenodo](https://zenodo.org/), [Figshare](https://figshare.com/)
-and other providers who will generate a citable, stable Digital Object Identifier (DOI) for your results.
-[re3data](https://www.re3data.org/) provides an overview of research data repositories that are suitable 
-for your domain-specific research results.
+   ```
+   curl -s https://get.nextflow.io | bash
+   ```
 
+### 4.2 Run the Toolkit
 
-Back to [Section 3](part3.md) | Next to [Section 5](part51.md)
+   Create a file listing the SRA run ids you want to process: 
+   ```
+   echo -e "ACCESSION\nSRR492065" > sra.tsv 
+   ```
+
+   ```
+   NXF_HOME=$PWD/.nextflow NXF_VER=25.04.2 nextflow run metagenomics/metagenomics-tk -r 0.13.2 -c ./aws.config \
+        -ansi-log false -profile standard -resume -entry wFullPipeline -work-dir work -params-file /vol/metagenomics-tk/default/fullPipeline_illumina_nanpore.yml \
+        --databases=/vol/databases/ \
+        --input.SRA.S3.path=/vol/sra.tsv --output=output
+   ``` 
+
+### 4.3 Explain the results
+
+   Inspect the GTDB-tk results
+   You can open the GTDB-Tk output:
+   ```
+   ls output/SRR492065/1/magAttributes/4.0.0/gtdb/SRR492065_gtdbtk_generated_combined.tsv   
+   ```
+
+   In column two there is a Staphylococcus Aureus genome.
+
+### 4.4 Clean up the VM
+
+1. Go to the **Instances** page and open the dropdown menu and click on the volume management button.
+    ![](figures/manageVolumeButton.png)
+
+    On the details page delete the VM.
+    ![](figures/detachVolumeButton.png)
+
+2. Finally, since you saved your output data you can safely delete the VM.
+
+Back to [Section 3](part3.md) | Next to [Section 5](part5.md)
