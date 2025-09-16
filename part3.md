@@ -215,5 +215,14 @@ Next, we will search for more metagenomic datasets via object storage and scale 
     ```
     cp publications.tsv output.tsv /vol/data
     ```
+### 3.4 Clean up the VM
+
+1. Go to the **Instances** page and open the dropdown menu and click on the volume management button.
+    ![](figures/manageVolumeButton.png)
+
+    On the details page delete the VM.
+    ![](figures/detachVolumeButton.png)
+
+2. Finally, since you saved your output data you can safely delete the VM.
 
 Back to [Section 2](part2.md) | Next to [Section 4](part4.md)
