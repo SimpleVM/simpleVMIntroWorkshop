@@ -1,4 +1,4 @@
-## Section 5: Inspect your generated data via a research environment
+## Section 4: Inspect your generated data via a research environment
 
 We now want to start a new VM. This time we would like to use RStudio 
 in order to inspect and visualize our results.

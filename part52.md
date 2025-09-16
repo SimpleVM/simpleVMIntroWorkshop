@@ -1,7 +1,7 @@
 ## Section 5 (Part 2): Scale up your analysis horizontally to further analyze the detected Microbiomes
 
 
-In the previous part you found a dataset that contains the **Staphylococcus Aureus** strain. 
+In the previous part you found datasets that contains the **Staphylococcus Aureus** and the **Enterococcus faecium** strain. 
 In the second part of section 5 you will investigate your cluster setup and use the infrastructure
 for your computations. We want now to try to assemble the metagenome and try to bin the strain in order to analyze the genes.
 
@@ -166,7 +166,7 @@ Especially for the classification part we need a lot of storage in order to stor
 
 8. We need to tell the Toolkit how to access the data stored in S3
 
-   ```
+```
 cat > /vol/spool/aws.config <<EOF
 aws {
   client {
@@ -181,7 +181,7 @@ aws {
     }
    }
 EOF 
-   ```
+```
 
 ### 4.2 Run the Toolkit
 
