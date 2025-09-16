@@ -1,33 +1,37 @@
-## Section 5 (Part 2): Scale up your analysis horizontally 
+## Section 5 (Part 2): Scale up your analysis horizontally to further analyze the detected Microbiomes
 
+
+In the previous part you found a dataset that contains the **Staphylococcus Aureus** strain. 
 In the second part of section 5 you will investigate your cluster setup and use the infrastructure
-for your computations.
+for your computations. We want now to try to assemble the metagenome and try to bin the strain in order to analyze the genes.
 
 ### 5.2 Investigate your cluster setup
 
-1. Click on the Clusters tab (Overview -> Clusters). After you have initiated the start-up of the cluster,
-   you should have been automatically redirected there. Now open the "How to connect"
-   dropdown of your machine. Click on the Theia ide URL which opens a new browser tab.
+1. Click on the Clusters tab. After you have initiated the start-up of the cluster,
+   you should have been automatically redirected there. Now click on the cluster to open the dropdown.
+   Click on the Theia IDE URL which opens a new browser tab.
 
 2. Click on `Terminal` in the upper menu and select `New Terminal`.
    ![](figures/terminal.png)
 
-3. Check how many nodes are part of your cluster by using `sinfo`
+3. Check how many nodes  are part of your cluster by using `sinfo`. 
 
 ```
-sinfo
+sinfo  --Node -o "%N %m %c %S %t"
 ```
 which will produce the following example output
 ```
-PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
-debug*       up   infinite      2   idle bibigrid-worker-1-1-us6t5hdtlklq7h9,bibigrid-worker-1-2-us6t5hdtlklq7h9
+NODELIST MEMORY CPUS ALLOCNODES STATE
+bibigrid-master-537z5g36abymq8w 64075 28 all drain
+bibigrid-worker-537z5g36abymq8w-0 64075 28 all idle
+bibigrid-worker-537z5g36abymq8w-1 64075 28 all idle
 ```
-
-The important columns here are `STATE` which tells you if the worker nodes are processing jobs
+You can also see the number of **CPUS** and the amount of RAM (**MEMORY**) assigned.
+Another important columns here are `STATE` which tells you if the worker nodes are processing jobs
 or are just in `idle` state and the column `NODELIST` which is just a list of nodes.
 
 4. You could now submit a job and test if your cluster is working as expected.
-   `/vol/spool` is the folder which is shared between all nodes. You should always submit jobs
+   **/vol/spool** is the folder which is shared between all nodes. You should always submit jobs
    from that directory.
    ```
    cd /vol/spool
@@ -64,8 +68,8 @@ or are just in `idle` state and the column `NODELIST` which is just a list of no
    ```
    which will produce the following example output:
    ```
-   JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
-   212     debug basic.sh   ubuntu  R       0:03      1 bibigrid-worker-1-1-us6t5hdtlklq7h9
+   JOBID PARTITION     NAME       USER    ST      TIME  NODES NODELIST(REASON)
+   1     openstack     basic.sh   ubuntu  R       0:04      1 bibigrid-worker-537z5g36abymq8w-0
    ```
    Squeue tells you the state of your jobs and which nodes are actually executing them.
    In this example you should see that `bibigrid-worker-1-1-us6t5hdtlklq7h9` is running (`ST` column) your job
@@ -79,7 +83,7 @@ or are just in `idle` state and the column `NODELIST` which is just a list of no
    ```
    Example output:
    ```
-   bibigrid-worker-1-1-us6t5hdtlklq7h9
+   bibigrid-worker-537z5g36abymq8w-0
    ```
 
 8. One way to distribute jobs is to use so-called array jobs. With array jobs you specify how many times
@@ -120,114 +124,108 @@ or are just in `idle` state and the column `NODELIST` which is just a list of no
    ls output_array
    ```
 
-### 5.3 Scan the SRA for genomes
+### 4.1 Prepare the Metagenomics-Toolkit run  
 
-1. We can now reuse the `search` function of the third part of this tutorial and
-submit an array job with the number of datasets we want to scan. Remember the search function
-searches a list of genomes in a list of metagenomic datasets. 
+The Metagenomics-Toolkit will run the steps quality control, assembly, binnning and classification.
+Internally is the Metagenomics-Toolkit workflow a Nextflow based workflow and Nextflow is also using commands like sbatch behind the scenes. 
+Especially for the classification part we need a lot of storage in order to store the database.
 
-Please download the updated script by using wget:
-```
-wget https://openstack.cebitec.uni-bielefeld.de:8080/simplevm-workshop/search.sh
-```
-<details><summary>Show Explanation</summary>
-This is the content of the script
-<code>
-#!/bin/bash
-
-#Create an output directory
-mkdir output_final
-
-#Use the conda environment you installed in your snapshot and activate it
-eval "$(conda shell.bash hook)"
-conda activate denbi
-
-#Add S3 SRA OpenStack Config
-/vol/spool/mc config host add sra https://openstack.cebitec.uni-bielefeld.de:8080 "" ""
-
-#Define search function you have already used in part 3
-search(){
-   left_read=$(echo $1 | cut -d ' '  -f 1);  
-   right_read=$(echo $1 | cut -d ' ' -f 2);
-   sra_id=$(echo ${left_read} | rev | cut -d '/' -f 1 | rev | cut -d '_' -f 1 | cut -d '.' -f 1);
-   /vol/spool/mc cat $left_read $right_read | mash screen -p 3 genomes.msh - \
-        | sed "s/^/${sra_id}\t/g"  \
-        | sed 's/\//\t/' > output_final/${sra_id}.txt ;
-}
-
-#Create a variable for the array task id
-LINE_NUMBER=${SLURM_ARRAY_TASK_ID}
-LINE=$(sed "${LINE_NUMBER}q;d" reads2.tsv)
-
-#Search for the datasets
-search ${LINE} 
-</code>
-</details>
-
-2. The input for the script is a file containing fastq datasets (`reads.tsv`) and
-a file containing a sketch of the genomes.
-
-Fastq datasets:
-```
-wget https://openstack.cebitec.uni-bielefeld.de:8080/simplevm-workshop/reads2.tsv
-```
-
-Sketch:
-```
-wget https://openstack.cebitec.uni-bielefeld.de:8080/simplevm-workshop/genomes.msh
-```
-
-3. We also need to download `mc` again since it was not saved as part of the snapshot.
-
-```
-wget https://dl.min.io/client/mc/release/linux-amd64/mc
-```
-
-Please set executable rights:
-
-```
-chmod a+x mc
-```
-
-4. You can execute the array job by using the following command:
-
-```
-sbatch --array=1-386 search.sh
-```
-
-5. You could now check the state of your jobs by using `squeue`.
-   Please note that the job execution might take a few hours. The VM will be available even after the workshop.
-   If you are interested in the results, you could plot them later.
-
-6. Concatenate all results into one file via `cat output_final/*.txt > output_final.tsv`
-
-7. Let's plot how many genomes we have found against the number of their matched k-mer hashes:
-   Activate the denbi conda environment:
-   ```
-   conda activate denbi
-   ```
-   Run `csvtk` on the output
-   ```
-   csvtk -t plot hist -H -f 3 output_final.tsv -o output_final.pdf
-   ```
-   You can open this file by a click on the Explorer View and selecting the pdf.
-   ![](figures/spoolPDF.png)
-    
-   Since there are many matches with a low number of k-mer hashes, you could filter the table first and plot
-   the filtered results.
-   ```
-   sort -rnk 3,3 output_final.tsv | head -n 50 > output_final_top50.tsv
-   ```   
+3. Create database directory
 
    ```
-   csvtk -t plot hist -H -f 3 output_final_top50.tsv -o output_final_top50.pdf
+   mkdir /vol/spool/database
    ```
 
-8. Finally, you could view the top matches via `less` and check their description on the 
-   [SRA website](https://www.ncbi.nlm.nih.gov/sra) by providing the SRA run accession
-   (Example `ERR4181696`) for further investigation.
+4. Download GTDB from our S3 storage using minio again. 
+
    ```
-   less output_final_top50.tsv
+   mc cp --recursive sra/databases/gtdbtk_r226_v2_data/ /vol/spool/release226
    ```
+
+5. Install Java 
+
+   ```
+   sudo apt install -y unzip default-jre 
+   ```
+
+6. Install Nextflow
+
+   ```
+   curl -s https://get.nextflow.io | bash
+   ```
+
+6. Move it to a folder where other binaries usually are stored:
+   ```
+   sudo mv mc /usr/local/bin/
+   ```
+
+7. Change file permissions:
+   ```
+   chmod a+x /usr/local/bin/nextflow
+   ```
+
+8. We need to tell the Toolkit how to access the data stored in S3
+
+   ```
+cat > /vol/spool/aws.config <<EOF
+aws {
+  client {
+      s3PathStyleAccess = true
+      connectionTimeout = 120000
+      maxParallelTransfers = 28
+      maxErrorRetry = 10
+      protocol = 'HTTPS'
+      connectionTimeout = '2000'
+      endpoint = 'https://s3-int.bi.denbi.de'
+      signerOverride = 'AWSS3V4SignerType'
+    }
+   }
+EOF 
+   ```
+
+### 4.2 Run the Toolkit
+
+1. Go to the shared directory:
+   ```
+   cd /vol/spool
+   ```
+
+2. Create a file listing the SRA run ids you want to process: 
+   ```
+   echo -e "ACCESSION\nSRR492065\nERR3277263" > sra.tsv 
+   ```
+   
+2. Run the Toolkit 
+   ```
+   NXF_HOME=$PWD/.nextflow NXF_VER=25.04.2 nextflow run metagenomics/metagenomics-tk \
+        -r 0.13.2 \
+        -c /vol/spool/aws.config \
+        -ansi-log false \
+        -profile slurm -resume -entry wFullPipeline \
+        -work-dir work \
+        -params-file https://raw.githubusercontent.com/SimpleVM/simpleVMWorkshopGCB/refs/heads/main/config/fullPipeline_illumina_nanpore.yml \
+        --databases=/vol/databases/ \
+        --input.SRA.S3.path=/vol/spool/sra.tsv --output=output
+   ``` 
+
+   <details><summary>Show Explanation</summary>
+   </details>
+
+3. In a second terminal you can check the progress using **squeue**
+   ```
+   squeue --format="%.18i %.90j %t %.6C %m %.10M %N"
+   ```
+
+# Todo: Explain what to check regarding output
+
+### 4.3 Explain the results
+
+   Inspect the GTDB-tk results
+   You can open the GTDB-Tk output:
+   ```
+   ls output/SRR492065/1/magAttributes/4.0.0/gtdb/SRR492065_gtdbtk_generated_combined.tsv   
+   ```
+
+   In column two there is a Staphylococcus Aureus genome.
 
 Back to [Section 5 (Part 1)](part51.md)

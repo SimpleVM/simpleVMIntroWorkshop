@@ -12,17 +12,24 @@ In the following you will configure a cluster and submit your tools to a SLURM j
 1. Click on "New Cluster" on the left menu.
    If you can not see the "New Cluster" item then reload the page.
 
-2. Since your master node is just used for submitting jobs, please select *de.NBI mini* as flavor and
-   the snapshot **SimpleVMIntro23** as image.
+2. Since your master node is just used for submitting jobs, please select *de.NBI medium* as flavor and
+   the snapshot **SimpleVMGCB2025** as image.
    ![](./figures/clusterMasterImage.png)
-   The same snapshot will also be used for all worker nodes.
-3. The worker nodes will run the actual tools, so we need a flavor wir more cores then the one
-   that the master node is using. Therefore, please select *de.NBI large* as flavor and start
+3. The worker nodes will run the actual tools, so we need a flavor with more cores then the one
+   that the master node is using. Furthermore, the worker nodes need more disk space since the tools save their intermediate results on the worker node. 
+   That`s why select a flavor with an Ephemeral disk. Therefore, please select *de.NBI large + ephemeral* as flavor and start
    two worker nodes by providing `2` as the worker count.
-      ![](./figures/batch_worker.png)
+   ![](./figures/batch_worker.png)
 
+4. Every cluster has a shared disk between all worker nodes and the master node. You can create a new volume for the cluster with 100 GB size. 
+   Don't forget to click on **Add Volume**.
 
-5. Now click on Start! That's it! Just with a few clicks you started your own cluster.
+5. Grant access to the workshop organizers.
+   This way the organizers get ssh access to your VM and can help you in case
+   something does not work as expected.
+   ![](figures/grantAccess.png)
+
+6. Now click on Start! That's it! Just with a few clicks you started your own cluster.
 
 
 Back to [Section 4](part4.md) | Next to [Section 5 (Part 2)](part52.md)
