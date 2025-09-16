@@ -1,7 +1,7 @@
-## Section 3: Scale up your analysis
+## Section 3: Scale up your analysis vertically
 
 In Parts 1 and 2, you tested the SimpleVM environment and the tools required for our analysis.
-Now it is time to use a VM with more cores to scale up the analysis. 
+Now it is time to use a VM with more cores to scale up the analysis vertically. 
 
 In the previous part, you saved your installed tools by creating a snapshot.
 If the snapshot upload has not been completed, we have prepared a snapshot for you. You will now reuse this snapshot with a larger flavour.
@@ -186,7 +186,7 @@ Next, we will search for more metagenomic datasets via object storage and scale 
    You can open this file by a click on the Explorer View and selecting the pdf. 
    ![](figures/openpdf.png)
 
-9. Get the title and the environment name about the found datasets by using Entrez tools
+9. Get the title and the environment name of the found datasets by using Entrez tools. 
    ```
    for sraid in $(ls -1 output/ | cut -f 1 -d '.'); do  
      esearch -db sra -query ${sraid} \
@@ -206,23 +206,29 @@ Next, we will search for more metagenomic datasets via object storage and scale 
     * All results are stored the `publications.tsv` file.
    </details>
 
-10. Set correct permissions on your volume:
+In Part 4 of the workshop, we will take a closer look at the results.
+
+### 3.4 Clean up resources
+
+We will now save the generated data to a volume and delete the VM, since we will analyse the results using a Research Environment with a new VM
+in the next section.
+
+1. Set correct permissions on your volume:
    ```
    sudo chown ubuntu:ubuntu /vol/data/
    ```
 
-11. Copy your results to the volume for later use:
-    ```
-    cp publications.tsv output.tsv /vol/data
-    ```
-### 3.4 Clean up the VM
+2. Copy your results to the volume for later use:
+   ```
+   cp publications.tsv output.tsv /vol/data
+   ```
 
-1. Go to the **Instances** page and open the dropdown menu and click on the volume management button.
-    ![](figures/manageVolumeButton.png)
+3. Go to the **Instances** page and open the dropdown menu and click on the volume management button.
+   ![](figures/manageVolumeButton.png)
 
-    On the details page delete the VM.
-    ![](figures/detachVolumeButton.png)
+   On the details page delete the VM.
+   ![](figures/detachVolumeButton.png)
 
-2. Finally, since you saved your output data you can safely delete the VM.
+4. Finally, since you saved your output data you can safely delete the VM.
 
 Back to [Section 2](part2.md) | Next to [Section 4](part4.md)
