@@ -1,4 +1,4 @@
-## Section 5 (Part 1): Scale up your analysis horizontally 
+## Section 5 (Part 1):  Scale up your analysis horizontally to further analyze the detected Microbiomes
 
 In this part of the tutorial, you will learn how to scale up your cluster horizontally using a SimpleVM Cluster.
 A SimpleVM cluster comprises a master node and multiple worker nodes. A SLURM workload manager
