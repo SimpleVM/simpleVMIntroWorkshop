@@ -47,7 +47,7 @@ SSH keys: https://cloud.denbi.de/wiki/portal/user_information/#ssh-key
    The filter can be used to search for the packages:
 
    * ncbi-genome-download (0.3.3)
-   * mash (2.2)
+   * mash (2.3)
    * csvtk (0.31.0)
    * entrez-direct (16.2)
    * jq (1.6)
