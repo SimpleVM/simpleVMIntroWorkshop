@@ -12,7 +12,7 @@ Next, you will configure a cluster and submit your tools to a SLURM job schedule
 1. Click on "New Cluster" on the left menu.
 
 2. Since your master node is just used for submitting jobs, please select *de.NBI medium* as flavor and
-   the snapshot **SimpleVMGCB2025** as image.
+   the snapshot **SimpleVMGCB2025-870cd** as image.
    ![](./figures/clusterMasterImage.png)
 3. The worker nodes will run the actual tools, so we need a flavor with more cores then the one
    that the master node is using. Furthermore, the worker nodes need more disk space since the tools save their intermediate results on the respective worker node. 

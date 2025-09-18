@@ -26,9 +26,9 @@ bibigrid-master-537z5g36abymq8w 64075 28 all drain
 bibigrid-worker-537z5g36abymq8w-0 64075 28 all idle
 bibigrid-worker-537z5g36abymq8w-1 64075 28 all idle
 ```
-You can also see the number of **CPUS** and the amount of RAM (**MEMORY**) assigned.
+You can also see the number of cpus (CPUs column) and the amount of RAM (MEMORY column) assigned.
 Another important columns here are `STATE` which tells you if the worker nodes are processing jobs
-or are just in `idle` state and the column `NODELIST` which is just a list of nodes.
+or are just in `idle` state and the column `NODELIST` which is just the name of the worker node.
 
 4. You could now submit a job and test if your cluster is working as expected.
    **/vol/spool** is the folder which is shared between all nodes. You should always submit jobs
@@ -126,45 +126,44 @@ or are just in `idle` state and the column `NODELIST` which is just a list of no
 
 ### 4.1 Prepare the Metagenomics-Toolkit run  
 
-The Metagenomics-Toolkit will run the steps quality control, assembly, binnning and classification.
+The [Metagenomics-Toolkit](https://github.com/metagenomics/metagenomics-tk) will only run the steps quality control, assembly, binnning and classification.
 Internally is the Metagenomics-Toolkit workflow a Nextflow based workflow and Nextflow is also using commands like sbatch behind the scenes. 
-Especially for the classification part we need a lot of storage in order to store the database.
+Especially for the classification part we need a lot of storage in order to store the GTDB database.
 
-3. Create database directory
+1. Create a database directory
 
    ```
    mkdir /vol/spool/database
    ```
 
-4. Download GTDB from our S3 storage using minio again. 
-
+2. We need to download the GTDB database from our S3 storage. This time we will use another S3 tool called s5cmd which is pre-installed on the VM. 
    ```
-   mc cp --recursive sra/databases/gtdbtk_r226_v2_data/ /vol/spool/release226
+   s5cmd  --endpoint-url https://s3-int.bi.denbi.de  --no-sign-request cp --concurrency 28  s3://databases/gtdbtk_r226_v2_data/release* /vol/spool/database
    ```
 
-5. Install Java 
+3. Install Java 
 
    ```
    sudo apt install -y unzip default-jre 
    ```
 
-6. Install Nextflow
+4. Install Nextflow
 
    ```
    curl -s https://get.nextflow.io | bash
    ```
 
-6. Move it to a folder where other binaries usually are stored:
+5. Move it to a folder where other binaries usually are stored:
    ```
-   sudo mv mc /usr/local/bin/
+   sudo mv nextflow /usr/local/bin/
    ```
 
-7. Change file permissions:
+6. Change file permissions:
    ```
    chmod a+x /usr/local/bin/nextflow
    ```
 
-8. We need to tell the Toolkit how to access the data stored in S3
+7. We need to tell the Toolkit how to access the data stored in S3
 
 ```
 cat > /vol/spool/aws.config <<EOF
@@ -183,6 +182,16 @@ aws {
 EOF 
 ```
 
+8. We will fetch the Toolkit directly from GitHub. Due to pull rate restrictions we will have to provide a read-only access token which was generated only for this workshop. You can read more about this in our [wiki](https://simplevm.denbi.de/wiki/FAQ/#i-have-problems-downloading-packages-from-github-eg-in-r).
+
+```
+mkdir -p /vol/spool/.nextflow
+```
+
+```
+cp ~/.nextflow/scm /vol/spool/.nextflow
+```
+
 ### 4.2 Run the Toolkit
 
 1. Go to the shared directory:
@@ -195,7 +204,7 @@ EOF
    echo -e "ACCESSION\nSRR492065\nERR3277263" > sra.tsv 
    ```
    
-2. Run the Toolkit 
+2. Run the Metagenomics-Toolkit 
    ```
    NXF_HOME=$PWD/.nextflow NXF_VER=25.04.2 nextflow run metagenomics/metagenomics-tk \
         -r 0.13.2 \
@@ -204,28 +213,79 @@ EOF
         -profile slurm -resume -entry wFullPipeline \
         -work-dir work \
         -params-file https://raw.githubusercontent.com/SimpleVM/simpleVMWorkshopGCB/refs/heads/main/config/fullPipeline_illumina_nanpore.yml \
-        --databases=/vol/databases/ \
-        --input.SRA.S3.path=/vol/spool/sra.tsv --output=output
+        --databases=/vol/spool/database/ \
+        --input.SRA.S3.path=/vol/spool/sra.tsv \
+        --output=output \
+        --steps.magAttributes.gtdb.database.extractedDBPath=/vol/spool/database/release226
    ``` 
 
    <details><summary>Show Explanation</summary>
    </details>
 
-3. In a second terminal you can check the progress using **squeue**
+3. (Optional) You could open a second terminal in Theia to check the progress using **squeue**.
    ```
    squeue --format="%.18i %.90j %t %.6C %m %.10M %N"
    ```
 
-# Todo: Explain what to check regarding output
 
-### 4.3 Explain the results
+### 4.3 Inspect the Toolkit results
 
-   Inspect the GTDB-tk results
-   You can open the GTDB-Tk output:
+   1. Let`s first check the size of the assemblies:
    ```
-   ls output/SRR492065/1/magAttributes/4.0.0/gtdb/SRR492065_gtdbtk_generated_combined.tsv   
+   cat output/*/*/assembly/*/megahit/*_contigs_stats.tsv | column -s$'\t' -t  
    ```
 
-   In column two there is a Staphylococcus Aureus genome.
+   2. The N50 in the previous output gives you a first estimation of the contig length. While the contig length looks good
+   lets also check the number of bins. 
+   
+   ```
+   ls -1 output/*/*/binning/*/metabat/
+   ```
+
+   You will now see that between 4 and 6 MAGs per dataset were produced: 
+   ```
+output/ERR3277263/1/binning/0.5.0/metabat/:
+ERR3277263_bin.1.fa
+ERR3277263_bin.2.fa
+ERR3277263_bin.3.fa
+ERR3277263_bin.4.fa
+ERR3277263_bin.5.fa
+ERR3277263_bin.6.fa
+ERR3277263_bin_contig_mapping.tsv
+ERR3277263_bins_stats.tsv
+ERR3277263_contigs_depth.tsv
+ERR3277263_notBinned.fa
+
+output/SRR492065/1/binning/0.5.0/metabat/:
+SRR492065_bin.1.fa
+SRR492065_bin.2.fa
+SRR492065_bin.3.fa
+SRR492065_bin.4.fa
+SRR492065_bin_contig_mapping.tsv
+SRR492065_bins_stats.tsv
+SRR492065_contigs_depth.tsv
+SRR492065_notBinned.fa
+   ```
+
+   Now we want to know the taxonomy of our MAGs to check if we have found the genomes of interest.
+   ```
+   cat output/*/*/magAttributes/*/*/*_gtdbtk_generated_combined.tsv | cut -f 1,5
+   ```
+   The output will look similar to this one:
+   ```
+BIN_ID  classification
+ERR3277263_bin.1.fa     d__Bacteria;p__Bacillota;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Blautia_A;s__Blautia_A fusiformis
+ERR3277263_bin.2.fa     d__Bacteria;p__Actinomycetota;c__Actinomycetes;o__Actinomycetales;f__Bifidobacteriaceae;g__Bifidobacterium;s__Bifidobacterium longum
+ERR3277263_bin.3.fa     d__Bacteria;p__Bacillota;c__Clostridia;o__Oscillospirales;f__Oscillospiraceae;g__Flavonifractor;s__Flavonifractor plautii
+ERR3277263_bin.4.fa     d__Bacteria;p__Bacillota;c__Bacilli;o__Lactobacillales;f__Enterococcaceae;g__Enterococcus_B;s__Enterococcus_B faecium
+ERR3277263_bin.5.fa     d__Bacteria;p__Pseudomonadota;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Escherichia;s__Escherichia coli
+ERR3277263_bin.6.fa     d__Bacteria;p__Actinomycetota;c__Actinomycetes;o__Actinomycetales;f__Bifidobacteriaceae;g__Bifidobacterium;s__Bifidobacterium longum
+BIN_ID  classification
+SRR492065_bin.1.fa      d__Bacteria;p__Bacillota;c__Bacilli;o__Lactobacillales;f__Enterococcaceae;g__Enterococcus;s__Enterococcus faecalis
+SRR492065_bin.2.fa      d__Bacteria;p__Bacillota;c__Clostridia;o__Tissierellales;f__Peptoniphilaceae;g__Peptoniphilus_A;s__Peptoniphilus_A lacydonensis
+SRR492065_bin.3.fa      d__Bacteria;p__Actinomycetota;c__Actinomycetes;o__Propionibacteriales;f__Propionibacteriaceae;g__Cutibacterium;s__Cutibacterium avidum
+SRR492065_bin.4.fa      d__Bacteria;p__Bacillota;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__Staphylococcus aureus
+   ```
+   We could indeed detect in one dataset a **Staphylococcus aureus** and in the other dataset **Enterococcus_B faecium** strain.
 
 Back to [Section 5 (Part 1)](part51.md)
