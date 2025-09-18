@@ -235,7 +235,7 @@ cp ~/.nextflow/scm /vol/spool/.nextflow
    You can leave the output of **watch** by pressing `CTRL + C`
 
 
-### 4.3 Inspect the Toolkit results
+### 5.5 Inspect the Toolkit results
 
    1. Let`s first check the size of the assemblies:
    ```
