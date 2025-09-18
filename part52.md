@@ -227,10 +227,12 @@ cp ~/.nextflow/scm /vol/spool/.nextflow
    <details><summary>Show Explanation</summary>
    </details>
 
-3. (Optional) You could open a second terminal in Theia to check the progress using **squeue**.
+3. (Optional) You could open a second terminal in Theia to check the progress using **squeue** and **watch**.
    ```
-   squeue --format="%.18i %.90j %t %.6C %m %.10M %N"
+   watch 'squeue --format="%.18i %.90j %t %.6C %m %.10M %N"'
    ```
+   Watch automatically gives you the output of a command at regular intervals. The default is 2 seconds.
+   You can leave the output of **watch** by pressing `CTRL + C`
 
 
 ### 4.3 Inspect the Toolkit results
