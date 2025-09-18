@@ -21,7 +21,7 @@ You should receive an email confirming that your are now member of the project.
 
 The actual tutorial starts from this page: https://simplevm.denbi.de . 
 
-1. Click on the `Create new Instance` tab.
+1. Click on the **Create new Instance** tab.
 
 2. If you are already member of another SimpleVM project then you are offered a drop down menu to select
 a project. In this case please select the **SimpleVMGCB2025** project. If this is
@@ -34,22 +34,25 @@ you will access all VMs via the browser. However, for your future work using
 SimpleVM, we highly recommend to read our de.NBI Cloud wiki regarding
 SSH keys: https://cloud.denbi.de/wiki/portal/user_information/#ssh-key
 
+   ![](./figures/profileKeyNotSet.png)
+
 ### 1.3 Start a VM
 
-1. Choose a name for your VM.
-2. Select **de.NBI default** as the flvor for your VM.
+1. When naming your VM, please use your name without any spaces (e.g. Max Mustermann -> MaxMusterman). 
+2. Select **de.NBI default** as the flavor for your VM.
 3. In the image section, please click on the *Research Environments* tab 
    and select the **TheiaIDE** image with OS version **24.04**.
    ![](./figures/theiaImage.png)
 4. Select the **Conda Packages** tab and choose the following tools with their version numbers given below for installation via Conda:
    The filter can be used to search for the packages:
 
-   * ncbi-genome-download (0.2.10)
+   * ncbi-genome-download (0.3.3)
    * mash (2.2)
    * csvtk (0.31.0)
    * entrez-direct (16.2)
    * jq (1.6)
    * parallel (20220922)
+   * minio-client (2025.08.13.08.35.41)
    ![](figures/bioconda.png)
    
    You will learn in the next sections how to apply these tools.
