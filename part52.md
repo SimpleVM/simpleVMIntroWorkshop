@@ -287,5 +287,17 @@ SRR492065_bin.3.fa      d__Bacteria;p__Actinomycetota;c__Actinomycetes;o__Propio
 SRR492065_bin.4.fa      d__Bacteria;p__Bacillota;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__Staphylococcus aureus
    ```
    We could indeed detect in one dataset a **Staphylococcus aureus** and in the other dataset **Enterococcus_B faecium** strain.
+   The next step could be to check the gene prediction and gene annotation. For example you could investigate the resistance genes of Staphylococcus aureus. 
+   In my example I have to check the genes of a MAG with the id **SRR492065_bin.4**. 
+   You could for example search for all genes that contain "antiobotic" in its name for further analysis.
+   ```
+   grep antibiotic output/*/*/annotation/*/rgi/SRR492065_bin.4.fa.rgi.tsv
+   ```  
+   At this step the tutorial ends but you could of course further investigate the detected MAGs. The Toolkit offers various additional analysis steps that can
+   be added to the configuration file: 
+   For example:
+    * Check the completeness or contamination of your MAGs using [Checkm](https://metagenomics.github.io/metagenomics-tk/latest/modules/magAttributes/).
+    * Investigate possible [plasmids](https://metagenomics.github.io/metagenomics-tk/latest/modules/plasmids/).  
+    * Compare the detected MAGs using the [dereplication](https://metagenomics.github.io/metagenomics-tk/latest/modules/dereplication/) module.
 
 Back to [Section 5 (Part 1)](part51.md)
