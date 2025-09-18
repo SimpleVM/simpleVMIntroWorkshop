@@ -54,4 +54,4 @@ in order to inspect and visualize our results.
 6. You can now start the script by clicking on `Run` -> `Restart R and run all chunks`.
   ![](figures/runRScript.png)
 
-Back to [Section 3](part3.md) | Next to [Section 6](part51.md)
+Back to [Section 3](part3.md) | Next to [Section 5](part51.md)
