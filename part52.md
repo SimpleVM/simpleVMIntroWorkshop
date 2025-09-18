@@ -124,7 +124,7 @@ or are just in `idle` state and the column `NODELIST` which is just the name of 
    ls output_array
    ```
 
-### 4.1 Prepare the Metagenomics-Toolkit run  
+### 5.3 Prepare the Metagenomics-Toolkit run  
 
 The [Metagenomics-Toolkit](https://github.com/metagenomics/metagenomics-tk) will only run the steps quality control, assembly, binnning and classification.
 Internally is the Metagenomics-Toolkit workflow a Nextflow based workflow and Nextflow is also using commands like sbatch behind the scenes. 
@@ -136,7 +136,7 @@ Especially for the classification part we need a lot of storage in order to stor
    mkdir /vol/spool/database
    ```
 
-2. We need to download the GTDB database from our S3 storage. This time we will use another S3 tool called s5cmd which is pre-installed on the VM. 
+2. We need to download the GTDB database from our S3 storage. This time we will use another S3 tool called s5cmd which is pre-installed on the VM. This step will take up to 10 minutes.
    ```
    s5cmd  --endpoint-url https://s3-int.bi.denbi.de  --no-sign-request cp --concurrency 28  s3://databases/gtdbtk_r226_v2_data/release* /vol/spool/database
    ```
@@ -192,7 +192,7 @@ mkdir -p /vol/spool/.nextflow
 cp ~/.nextflow/scm /vol/spool/.nextflow
 ```
 
-### 4.2 Run the Toolkit
+### 5.4 Run the Toolkit
 
 1. Go to the shared directory:
    ```
