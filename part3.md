@@ -53,42 +53,27 @@ Next, we will search for more metagenomic datasets via object storage and scale 
    conda activate denbi
    ```
 
-6. Unfortunately, Conda does not offer a minio cli binary,
-   which means that we would have to install it manually.
-   Download the binary:
-   ```
-   wget https://dl.min.io/client/mc/release/linux-amd64/mc
-   ```
-   Move it to a folder where other binaries usually are stored:
-   ```
-   sudo mv mc /usr/local/bin/
-   ```
-   Change file permissions:
-   ```
-   chmod a+x /usr/local/bin/mc
-   ```
-
-7. Add S3 config for our public SRA mirror on our Bielefeld Cloud site:
+6. Add S3 config for our public SRA mirror on our Bielefeld Cloud site:
    ```
    mc alias set sra https://openstack.cebitec.uni-bielefeld.de:8080 "" ""
    ```
 
-8. List which files are available for SRA number `SRR3984908`:
+7. List which files are available for SRA number `SRR3984908`:
    ```
    mc ls sra/ftp.era.ebi.ac.uk/vol1/fastq/SRR398/008/SRR3984908
    ```
 
-9. Check the size of these files
+8. Check the size of these files
    ```
    mc du sra/ftp.era.ebi.ac.uk/vol1/fastq/SRR398/008/SRR3984908
    ```
 
-10. You can read the first lines of these files by using `mc cat`.
+9. You can read the first lines of these files by using `mc cat`.
    ```
    mc cat sra/ftp.era.ebi.ac.uk/vol1/fastq/SRR398/008/SRR3984908/SRR3984908_1.fastq.gz | zcat | head
    ```
 
-11. Search for SRA run accessions we want to analyse and check the sum of their size
+10. Search for SRA run accessions we want to analyse and check the sum of their size
    (this may take a while to complete):
    ```
    mc find --regex "SRR6439511.*|SRR6439513.*|ERR3277263.*|ERR929737.*|ERR929724.*"  sra/ftp.era.ebi.ac.uk/vol1/fastq  -exec "  mc ls -r --json  {} " \
