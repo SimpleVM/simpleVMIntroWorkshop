@@ -112,5 +112,8 @@ The upload of your snapshot might take a few minutes.
 
 ![](figures/snapshot.png)
 
+You can view the current status of your snapshot in the snapshot overview.
+Your snapshot is ready when its status is 'ACTIVE'.
+
 
 Back to [Section 1](part1.md) | Next to [Section 3](part3.md)
