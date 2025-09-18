@@ -16,7 +16,7 @@ Next, you will configure a cluster and submit your tools to a SLURM job schedule
    ![](./figures/clusterMasterImage.png)
 3. The worker nodes will run the actual tools, so we need a flavor with more cores then the one
    that the master node is using. Furthermore, the worker nodes need more disk space since the tools save their intermediate results on the respective worker node. 
-   That`s why we have to select a flavor with an Ephemeral disk. Please select **de.NBI large + ephemeral** as flavor and start
+   That's why we have to select a flavor with an Ephemeral disk. Please select **de.NBI large + ephemeral** as flavor and start
    two worker nodes by providing `2` as the worker count.
    ![](./figures/batch_worker.png)
 
