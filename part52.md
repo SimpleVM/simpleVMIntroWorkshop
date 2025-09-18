@@ -166,7 +166,7 @@ Especially for the classification part we need a lot of storage in order to stor
 7. We need to tell the Toolkit how to access the data stored in S3
 
 ```
-cat > /vol/spool/aws.config <<EOF
+cat > /vol/spool/aws.config << EOF
 aws {
   client {
       s3PathStyleAccess = true
