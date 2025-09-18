@@ -1,4 +1,4 @@
-## Section 3: Scale up your analysis vertically
+## Section 3: Access S3 and scale up your analysis vertically
 
 In Parts 1 and 2, you tested the SimpleVM environment and the tools required for our analysis.
 Now it is time to use a VM with more cores to scale up the analysis vertically. 
