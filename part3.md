@@ -27,9 +27,7 @@ Next, we will search for more metagenomic datasets via object storage and scale 
    Don't forget to click on `Add Volume`. 
    ![](figures/createVolume.png)
 
-5. Grant again access to all project members with a `Cloud-portal-support` tag.
-   This way these members get ssh access to your VM and can help you in case
-   something does not work as expected.
+5. Grant access to the workshop organizers. This way the organizers get ssh access to your VM and can help you in case something does not work as expected. 
    ![](figures/grantAccess.png)
 
 6. Confirm the checkbox and click on **Start Instance**.
