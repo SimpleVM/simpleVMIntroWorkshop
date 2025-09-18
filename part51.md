@@ -9,7 +9,7 @@ Next, you will configure a cluster and submit your tools to a SLURM job schedule
 
 ### 5.1 Create a Cluster
 
-1. Click on "New Cluster" on the left menu.
+1. Click on "Create new Clusters" on the left menu.
 
 2. Since your master node is just used for submitting jobs, please select *de.NBI medium* as flavor and
    the snapshot **SimpleVMGCB2025-870cd** as image.
