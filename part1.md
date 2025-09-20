@@ -28,13 +28,11 @@ a project. In this case please select the **SimpleVMGCB2025** project. If this i
 your first SimpleVM project, SimpleVM will let you know that have to go to the profile page again to generate a new key.
 
 3. If you have no SSH key set so far or have not confirmed your unix name, just click on the **Got to Profile to set ...** button.
-
 Regarding the SSH key click on the profile page on **Generate new keypair** and save the
 private key. During this workshop you will not need this file because 
 you will access all VMs via the browser. However, for your future work using
 SimpleVM, we highly recommend to read our de.NBI Cloud wiki regarding
 SSH keys: https://cloud.denbi.de/wiki/portal/user_information/#ssh-key
-
 Regarding the Unix name, please confirm or update it before confirming.
 
    ![](./figures/unix_name_ssh.png)
