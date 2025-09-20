@@ -14,7 +14,7 @@ freshwater or biogas plants in order to investigate the functions and
 interactions of the microbial community.
 
 In order to find those microbes, you will have to interact with 
-the de.NBI Cloud via SimpleVM. This workshop is divided into three
+the de.NBI Cloud via SimpleVM. This workshop is divided into five
 parts.
 
 ### Section 1: Big things start small  
@@ -31,7 +31,7 @@ provisioned your VM with all your tools installed on it.
 
 **[Go to the second section](part2.md)**
 
-### Section 3: Scale up your analysis 
+### Section 3: Access S3 and scale up your analysis vertically 
 
 In the third section you will learn about object storage and the 
 Sequence Read Archive. Further, you will run your analysis pipeline.
@@ -45,10 +45,10 @@ environment installed.
 
 **[Go to the fourth section](part4.md)**
 
-### Section 5: Use a cluster setup to further scale up your analysis
+### Section 5: Scale up your analysis horizontally to further analyze the detected Microbiomes
 
 In this part you will use a SimpleVM Cluster to distribute your analysis 
-on multiple machines instead of just one.
+on multiple machines instead of just one. You will use the Metagenomics-Toolkit to analyze the detected Microbiomes.
 
 **[Go to the fifth section (Part 1)](part51.md)**
 
