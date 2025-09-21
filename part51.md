@@ -9,7 +9,7 @@ Next, you will configure a cluster and submit your tools to a SLURM job schedule
 
 ### 5.1 Create a Cluster
 
-1. Click on "Create new Clusters" on the left menu.
+1. Click on "Create new Clusters" on the left menu. Please use again your name without any spaces (e.g. Max Mustermann -> MaxMusterman).
 
 2. Since your master node is just used for submitting jobs, please select *de.NBI medium* as flavor and
    the snapshot **SimpleVMGCB2025-7a849** as image.
@@ -17,7 +17,7 @@ Next, you will configure a cluster and submit your tools to a SLURM job schedule
 3. The worker nodes will run the actual tools, so we need a flavor with more cores then the one
    that the master node is using. Furthermore, the worker nodes need more disk space since the tools save their intermediate results on the respective worker node. 
    That's why we have to select a flavor with an Ephemeral disk. Please select **de.NBI large + ephemeral** as flavor and start
-   two worker nodes by providing `2` as the worker count.
+   three worker nodes by providing `3` as the worker count.
    ![](./figures/batch_worker.png)
 
 4. Every cluster has a shared disk between all worker nodes and the master node. You can create a new volume for the cluster with 300 GB size. 

@@ -5,7 +5,8 @@ in order to inspect and visualize our results.
 
 ### 5.1 Create a VM based on a Research Environment
 
-1. Start a new VM. This time select again the de.NBI default flavor since
+1. Start a new VM. Please use again your name without any spaces (e.g. Max Mustermann -> MaxMusterman).
+   This time select again the de.NBI default flavor since
    we do not need that much resources anymore.
 
 2. In the image section, please click on the *Research Environments* tab 
