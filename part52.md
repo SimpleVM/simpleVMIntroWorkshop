@@ -209,7 +209,8 @@ cp ~/.nextflow/scm /vol/spool/.nextflow
    echo -e "ACCESSION\nERR2683178\nSRR492065\nSRR6439514" > sra.tsv 
    ```
    
-2. Run the Metagenomics-Toolkit 
+3. Run the Metagenomics-Toolkit. One of the datasets should be processed within a few minutes, so you can continue to the next subsection to inspect
+   the result of the sample.
    ```
    NXF_HOME=$PWD/.nextflow NXF_VER=25.04.2 nextflow run metagenomics/metagenomics-tk \
         -r 0.13.2 \
@@ -218,13 +219,25 @@ cp ~/.nextflow/scm /vol/spool/.nextflow
         -profile slurm -resume -entry wFullPipeline \
         -work-dir work \
         -params-file https://raw.githubusercontent.com/SimpleVM/simpleVMWorkshopGCB/refs/heads/main/config/fullPipeline_illumina_nanpore.yml \
-        --databases=/vol/spool/database/ \
+        --databases=/vol/scratch/database/ \
         --input.SRA.S3.path=/vol/spool/sra.tsv \
         --output=output \
         --steps.magAttributes.gtdb.database.extractedDBPath=/vol/spool/database/release226
    ``` 
 
    <details><summary>Show Explanation</summary>
+
+ * `NXF_HOME` points to the directory where Nextflow internal files and additional configs are stored. The default location is your home directory.
+ However, it might be that your home directory is not shared among all worker nodes and is only available on the master node.  In this example
+ the variable points to your current working directory (`$PWD/.nextflow`).
+ * `-work-dir` points in this example to your current working directory and should point to a directory that is shared between all worker nodes.
+ * `-profile` defines the execution profile that should be used (local or cluster computing).
+ * `-entry` is the entrypoint of the Toolkit.
+ * `-params-file` sets the parameters file which defines the parameters for all tools.
+ * `--databases` is the directory on the worker node where all databases are saved. Already downloaded and extracted databases on a shared file system can be configured in the database setting of the corresponding database section in the configuration file.
+ * `--output` is the output directory where all results are saved. If you want to know more about which outputs are created, then please refer to the modules section.
+ * `--input.SRA.S3.path` is the path to a TSV file that lists the datasets that should be processed. Besides paired-end data there are also other input types. Please check the input section.
+    
    </details>
 
 3. (Optional) You could open a second terminal in Theia to check the progress using **squeue** and **watch**.
@@ -236,6 +249,9 @@ cp ~/.nextflow/scm /vol/spool/.nextflow
 
 
 ### 5.5 Inspect the Toolkit results
+
+   The following is just an example analysis. If the commands below do not output anything then it means that the pipeline is still running.
+   In that case, please wait a few more minutes. 
 
    1. Let`s first check the size of the assemblies:
    ```
@@ -249,20 +265,8 @@ cp ~/.nextflow/scm /vol/spool/.nextflow
    ls -1 output/*/*/binning/*/metabat/
    ```
 
-   You will now see that between 4 and 6 MAGs per dataset were produced: 
+   Once the Toolkit has processed the dataset SRR492065 you should see at least the following output: 
    ```
-output/ERR3277263/1/binning/0.5.0/metabat/:
-ERR3277263_bin.1.fa
-ERR3277263_bin.2.fa
-ERR3277263_bin.3.fa
-ERR3277263_bin.4.fa
-ERR3277263_bin.5.fa
-ERR3277263_bin.6.fa
-ERR3277263_bin_contig_mapping.tsv
-ERR3277263_bins_stats.tsv
-ERR3277263_contigs_depth.tsv
-ERR3277263_notBinned.fa
-
 output/SRR492065/1/binning/0.5.0/metabat/:
 SRR492065_bin.1.fa
 SRR492065_bin.2.fa
@@ -278,24 +282,17 @@ SRR492065_notBinned.fa
    ```
    cat output/*/*/magAttributes/*/*/*_gtdbtk_generated_combined.tsv | cut -f 1,5
    ```
-   The output will look similar to this one:
+   If the dataset SRR492065 is already processed your output will contain at least the following output:
    ```
-BIN_ID  classification
-ERR3277263_bin.1.fa     d__Bacteria;p__Bacillota;c__Clostridia;o__Lachnospirales;f__Lachnospiraceae;g__Blautia_A;s__Blautia_A fusiformis
-ERR3277263_bin.2.fa     d__Bacteria;p__Actinomycetota;c__Actinomycetes;o__Actinomycetales;f__Bifidobacteriaceae;g__Bifidobacterium;s__Bifidobacterium longum
-ERR3277263_bin.3.fa     d__Bacteria;p__Bacillota;c__Clostridia;o__Oscillospirales;f__Oscillospiraceae;g__Flavonifractor;s__Flavonifractor plautii
-ERR3277263_bin.4.fa     d__Bacteria;p__Bacillota;c__Bacilli;o__Lactobacillales;f__Enterococcaceae;g__Enterococcus_B;s__Enterococcus_B faecium
-ERR3277263_bin.5.fa     d__Bacteria;p__Pseudomonadota;c__Gammaproteobacteria;o__Enterobacterales;f__Enterobacteriaceae;g__Escherichia;s__Escherichia coli
-ERR3277263_bin.6.fa     d__Bacteria;p__Actinomycetota;c__Actinomycetes;o__Actinomycetales;f__Bifidobacteriaceae;g__Bifidobacterium;s__Bifidobacterium longum
 BIN_ID  classification
 SRR492065_bin.1.fa      d__Bacteria;p__Bacillota;c__Bacilli;o__Lactobacillales;f__Enterococcaceae;g__Enterococcus;s__Enterococcus faecalis
 SRR492065_bin.2.fa      d__Bacteria;p__Bacillota;c__Clostridia;o__Tissierellales;f__Peptoniphilaceae;g__Peptoniphilus_A;s__Peptoniphilus_A lacydonensis
 SRR492065_bin.3.fa      d__Bacteria;p__Actinomycetota;c__Actinomycetes;o__Propionibacteriales;f__Propionibacteriaceae;g__Cutibacterium;s__Cutibacterium avidum
 SRR492065_bin.4.fa      d__Bacteria;p__Bacillota;c__Bacilli;o__Staphylococcales;f__Staphylococcaceae;g__Staphylococcus;s__Staphylococcus aureus
    ```
-   We could indeed detect in one dataset a **Staphylococcus aureus** and in the other dataset **Enterococcus_B faecium** strain.
+   We could indeed detect in one dataset a **Staphylococcus aureus** strain.
 
-   4. The next step could be to check the gene prediction and gene annotation. For example you could investigate the resistance genes of Staphylococcus aureus. 
+   4. The next step could be to check the gene prediction and gene annotation. For example you could investigate the resistance genes of Staphylococcus aureus MAG. 
    In my example output I have to check the genes of a MAG with the id **SRR492065_bin.4**. 
    You could for example search for all genes that contain "antiobotic" in its name for further analysis.
    ```
