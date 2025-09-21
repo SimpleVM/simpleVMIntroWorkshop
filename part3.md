@@ -12,11 +12,11 @@ Next, we will search for more metagenomic datasets via object storage and scale 
 1. Click on **Snapshots** in left menu and check which status
    your snapshot has. You can also filter of the name in the top menu. 
    If it has the status `active`, you can click on the snapshot to open the dropdown menu and click on start to spawn a new VM.
-   In case your snapshot is still not active just choose the **SimpleVMGCB** snapshot. You will now be redirected to the **Create new Instance** page with a
+   In case your snapshot is still not active just choose the **SimpleVMGCB-de32e** snapshot. You will now be redirected to the **Create new Instance** page with a
    preselected snapshot.
    ![](figures/snapshot_overview.png)
 
-2. Provide again a name for your instance.
+2. Provide again a name for your instance. Please use your name without any spaces (e.g. Max Mustermann -> MaxMusterman).
 
 3. In the flavors sections please choose the **de.NBI large** flavor which has 28 cores available.
    ![](figures/large_flavor.png)
@@ -41,7 +41,7 @@ Next, we will search for more metagenomic datasets via object storage and scale 
    ![](figures/deleteOldVM.png)
    
 2. On your new VM, select again the link to access Theia IDE.
-   ![](figures/howtoconnect.png)
+   ![](figures/howtoconnectbig.png)
 
 3. Click on `Terminal` in the upper menu and select `New Terminal`.
    ![](figures/terminal.png)
@@ -209,7 +209,7 @@ in the next section.
 3. Go to the **Instances** page and open the dropdown menu and click on the volume management button.
    ![](figures/manageVolumeButton.png)
 
-   On the details page delete the VM.
+   On the volumes details page detach the volume.
    ![](figures/detachVolumeButton.png)
 
 4. Finally, since you saved your output data you can safely delete the VM.
