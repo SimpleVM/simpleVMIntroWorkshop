@@ -184,7 +184,7 @@ aws {
       signerOverride = 'AWSS3V4SignerType'
     }
    }
-EOF 
+EOF
 ```
 
 8. We will fetch the Toolkit directly from GitHub. Due to pull rate restrictions we will have to provide a read-only access token which was generated only for this workshop. You can read more about this in our [wiki](https://simplevm.denbi.de/wiki/FAQ/#i-have-problems-downloading-packages-from-github-eg-in-r).
