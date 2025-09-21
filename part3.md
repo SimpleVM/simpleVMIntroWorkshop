@@ -164,7 +164,8 @@ Next, we will search for more metagenomic datasets via object storage and scale 
 
 8. Let's plot how many genomes we have found against the number of their matched k-mer hashes:
    ```
-   csvtk -t plot hist -H -f 3 output.tsv -o output.pdf
+   csvtk -t plot hist -H -f 3 --xlab "Matched K-mer Hashes" \
+    --ylab "Found Datasets" --title "Mash Results " output.tsv -o output.pdf
    ```
    You can open this file by a click on the Explorer View and selecting the pdf. 
    ![](figures/openpdf.png)
