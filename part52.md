@@ -145,7 +145,6 @@ Especially for the classification part we need a lot of storage in order to stor
    ```
    s5cmd  --endpoint-url https://s3-int.bi.denbi.de  --no-sign-request cp --concurrency 28  s3://databases/gtdbtk_r226_v2_data/release* /vol/spool/database
    ```
-
 3. Install Java 
 
    ```
@@ -226,18 +225,21 @@ cp ~/.nextflow/scm /vol/spool/.nextflow
    ``` 
 
    <details><summary>Show Explanation</summary>
+       * `NXF_HOME` points to the directory where Nextflow internal files and additional configs are stored. The default location is your home directory. However, it might be that your home directory is not shared among all worker nodes and is only available on the master node.  In this example the variable points to your current working directory (`$PWD/.nextflow`).
+      
+       * `-work-dir` points in this example to your current working directory and should point to a directory that is shared between all worker nodes.
 
- * `NXF_HOME` points to the directory where Nextflow internal files and additional configs are stored. The default location is your home directory.
- However, it might be that your home directory is not shared among all worker nodes and is only available on the master node.  In this example
- the variable points to your current working directory (`$PWD/.nextflow`).
- * `-work-dir` points in this example to your current working directory and should point to a directory that is shared between all worker nodes.
- * `-profile` defines the execution profile that should be used (local or cluster computing).
- * `-entry` is the entrypoint of the Toolkit.
- * `-params-file` sets the parameters file which defines the parameters for all tools.
- * `--databases` is the directory on the worker node where all databases are saved. Already downloaded and extracted databases on a shared file system can be configured in the database setting of the corresponding database section in the configuration file.
- * `--output` is the output directory where all results are saved. If you want to know more about which outputs are created, then please refer to the modules section.
- * `--input.SRA.S3.path` is the path to a TSV file that lists the datasets that should be processed. Besides paired-end data there are also other input types. Please check the input section.
-    
+       * `-profile` defines the execution profile that should be used (local or cluster computing).
+
+       * `-entry` is the entrypoint of the Toolkit.
+
+       * `-params-file` sets the parameters file which defines the parameters for all tools.
+
+       * `--databases` is the directory on the worker node where all databases are saved. Already downloaded and extracted databases on a shared file system can be configured in the database setting of the corresponding database section in the          configuration file.
+
+       * `--output` is the output directory where all results are saved. If you want to know more about which outputs are created, then please refer to the modules section.
+
+       * `--input.SRA.S3.path` is the path to a TSV file that lists the datasets that should be processed. Besides paired-end data there are also other input types. Please check the input section.  
    </details>
 
 3. (Optional) You could open a second terminal in Theia to check the progress using **squeue** and **watch**.
