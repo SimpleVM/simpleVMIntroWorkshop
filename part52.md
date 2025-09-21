@@ -1,9 +1,8 @@
 ## Section 5 (Part 2): Scale up your analysis horizontally to further analyze the detected Microbiomes
 
-
-In the previous part you found datasets that contains the **Staphylococcus Aureus** and the **Enterococcus faecium** strain. 
+In the previous part you found datasets that contain the **Staphylococcus Aureus** and the **Acinetobacter Baumannii** strain. 
 In the second part of section 5 you will investigate your cluster setup and use the infrastructure
-for your computations. We want now to try to assemble the metagenome and try to bin the strain in order to analyze the genes.
+for your computations. We will then use the cluster to assemble the metagenomes and try to bin the strains in order to analyze the genes.
 
 ### 5.2 Investigate your cluster setup
 
@@ -22,9 +21,10 @@ sinfo  --Node -o "%N %m %c %S %t"
 which will produce the following example output
 ```
 NODELIST MEMORY CPUS ALLOCNODES STATE
-bibigrid-master-537z5g36abymq8w 64075 28 all drain
-bibigrid-worker-537z5g36abymq8w-0 64075 28 all idle
-bibigrid-worker-537z5g36abymq8w-1 64075 28 all idle
+bibigrid-master-7bg2m4zgp13jxhp 31962 14 all drain
+bibigrid-worker-7bg2m4zgp13jxhp-0 64075 28 all idle
+bibigrid-worker-7bg2m4zgp13jxhp-1 64075 28 all idle
+bibigrid-worker-7bg2m4zgp13jxhp-2 64075 28 all idle
 ```
 You can also see the number of cpus (CPUs column) and the amount of RAM (MEMORY column) assigned.
 Another important columns here are `STATE` which tells you if the worker nodes are processing jobs
@@ -69,10 +69,10 @@ or are just in `idle` state and the column `NODELIST` which is just the name of 
    which will produce the following example output:
    ```
    JOBID PARTITION     NAME       USER    ST      TIME  NODES NODELIST(REASON)
-   1     openstack     basic.sh   ubuntu  R       0:04      1 bibigrid-worker-537z5g36abymq8w-0
+   1     openstack     basic.sh   ubuntu  R       0:04      1 bibigrid-worker-7bg2m4zgp13jxhp-0
    ```
    Squeue tells you the state of your jobs and which nodes are actually executing them.
-   In this example you should see that `bibigrid-worker-1-1-us6t5hdtlklq7h9` is running (`ST` column) your job
+   In this example you should see that `bibigrid-worker-7bg2m4zgp13jxhp-0` is running (`ST` column) your job
    with the name `basic.sh`.
 
 7. Once the job has finished you should see a slurm output file in your directory (Example: `slurm-212.out`)
@@ -83,7 +83,7 @@ or are just in `idle` state and the column `NODELIST` which is just the name of 
    ```
    Example output:
    ```
-   bibigrid-worker-537z5g36abymq8w-0
+   bibigrid-worker-7bg2m4zgp13jxhp-0
    ```
 
 8. One way to distribute jobs is to use so-called array jobs. With array jobs you specify how many times
@@ -206,7 +206,7 @@ cp ~/.nextflow/scm /vol/spool/.nextflow
 
 2. Create a file listing the SRA run ids you want to process: 
    ```
-   echo -e "ACCESSION\nSRR492065\nERR3277263" > sra.tsv 
+   echo -e "ACCESSION\nERR2683178\nSRR492065\nSRR6439514" > sra.tsv 
    ```
    
 2. Run the Metagenomics-Toolkit 
