@@ -66,12 +66,7 @@ Next, we will search for more metagenomic datasets via object storage and scale 
    mc du sra/ftp.era.ebi.ac.uk/vol1/fastq/SRR398/008/SRR3984908
    ```
 
-9. You can read the first lines of these files by using `mc cat`.
-   ```
-   mc cat sra/ftp.era.ebi.ac.uk/vol1/fastq/SRR398/008/SRR3984908/SRR3984908_1.fastq.gz | zcat | head
-   ```
-
-10. Search for SRA run accessions we want to analyse and check the sum of their size
+9. Search for SRA run accessions we want to analyse and check the sum of their size
    (this may take a while to complete):
    ```
    mc find --regex "SRR6439511.*|SRR6439513.*|ERR3277263.*|ERR929737.*|ERR929724.*"  sra/ftp.era.ebi.ac.uk/vol1/fastq  -exec "  mc ls -r --json  {} " \
@@ -86,6 +81,9 @@ Next, we will search for more metagenomic datasets via object storage and scale 
     * `numfmt` transforms the sum to a human-readable string.
    
    </details>
+
+10. Take a few minutes to investigate other `mc` commands like `mc cat` by viewing the `mc` help page with `mc -h`.
+    You can leave the help page by typing `q`. 
 
 ### 3.3 Run commands with more cores and plot your result
 
