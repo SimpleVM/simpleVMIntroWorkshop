@@ -145,6 +145,8 @@ Especially for the classification part we need a lot of storage in order to stor
    ```
    s5cmd  --endpoint-url https://s3-int.bi.denbi.de  --no-sign-request cp --concurrency 28  s3://databases/gtdbtk_r226_v2_data/release* /vol/spool/database
    ```
+   While the command is running you could investigate the s5cmd parameters in a second terminal and also try to rerun the minio commands of [part 3](https://github.com/SimpleVM/simpleVMWorkshopGCB/blob/main/part3.md#32-interact-with-the-sra-mirror-and-search-for-more-datasets-to-analyze) with s5cmd. 
+
 3. Install Java 
 
    ```
