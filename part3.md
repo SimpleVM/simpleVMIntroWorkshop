@@ -110,7 +110,7 @@ Next, we will search for more metagenomic datasets via object storage and scale 
    mkdir -p output
    ```
 
-4. You can now run the commands from the first part with found datasets as input (this may take a while to complete):
+4. In the following you will reuse the mash command and use the downloaded files as input (this may take a while to complete):
    Create a function that we will run in prallel:
    ```
    search(){ 
