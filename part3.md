@@ -83,6 +83,7 @@ Next, we will search for more metagenomic datasets via object storage and scale 
    
    </details>
 
+
 9. Take a few minutes to investigate other `mc` commands by viewing the `mc` help page with `mc -h`.
     You can leave the help page by typing `q`. 
 

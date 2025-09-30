@@ -12,19 +12,19 @@ You can read more about the registration process in our
 de.NBI Cloud wiki: https://cloud.denbi.de/wiki/registration/.
 Please make sure to to click on “continue” if this button shows up.
 
-Once you obtain a de.NBI Cloud account, please register for the SimpleVM project: https://cloud.denbi.de/gcb.
+Once you obtain a de.NBI Cloud account, please register for the SimpleVM project: https://cloud.denbi.de/clum2025 .
 
 The workshop organizers will approve your project membership application as soon as possible.
 You should receive an email confirming that your are now member of the project.
 
-### 1.2 Select the SimpleVMGCB2025 project
+### 1.2 Select the simplevmCLUM25 project
 
 The actual tutorial starts from this page: https://simplevm.denbi.de . 
 
 1. Click on the **Create new Instance** tab.
 
 2. If you are already member of another SimpleVM project then you are offered a drop down menu to select
-a project. In this case please select the **SimpleVMGCB2025** project. If this is
+a project. In this case please select the **simplevmCLUM25** project. If this is
 your first SimpleVM project, SimpleVM will let you know that have to go to the profile page again to generate a new key.
 
 3. If you have no SSH key set so far or have not confirmed your unix name, just click on the **Got to Profile to set ...** button.

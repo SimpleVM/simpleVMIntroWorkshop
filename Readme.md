@@ -14,7 +14,7 @@ freshwater or biogas plants in order to investigate the functions and
 interactions of the microbial community.
 
 In order to find those microbes, you will have to interact with 
-the de.NBI Cloud via SimpleVM. This workshop is divided into five
+the de.NBI Cloud via SimpleVM. This workshop is divided into four
 parts.
 
 ### Section 1: Big things start small  
@@ -44,12 +44,3 @@ In the fourth section you will start a virtual machine with a RStudio research
 environment installed.
 
 **[Go to the fourth section](part4.md)**
-
-### Section 5: Scale up your analysis horizontally to further analyze the detected Microbiomes
-
-In this part you will use a SimpleVM Cluster to distribute your analysis 
-on multiple machines instead of just one. You will use the Metagenomics-Toolkit to analyze the detected Microbiomes.
-
-**[Go to the fifth section (Part 1)](part51.md)**
-
-**[Go to the fifth section (Part 2)](part52.md)**
