@@ -82,7 +82,7 @@ Next, we will search for more metagenomic datasets via object storage and scale 
    
    </details>
 
-10. Take a few minutes to investigate other `mc` commands like `mc cat` by viewing the `mc` help page with `mc -h`.
+10. Take a few minutes to investigate other `mc` commands by viewing the `mc` help page with `mc -h`.
     You can leave the help page by typing `q`. 
 
 ### 3.3 Run commands with more cores and plot your result
