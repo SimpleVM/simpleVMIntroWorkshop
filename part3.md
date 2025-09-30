@@ -50,23 +50,24 @@ Next, we will search for more metagenomic datasets via object storage and scale 
    ```
    conda activate denbi
    ```
+   NOTE: The conda environment will only be active in the terminal where this command is executed. Should you open another terminal, you will have to reactivate the conda environment.
 
-6. Add S3 config for our public SRA mirror on our Bielefeld Cloud site:
+5. Add S3 config for our public SRA mirror on our Bielefeld Cloud site:
    ```
    mc alias set sra https://openstack.cebitec.uni-bielefeld.de:8080 "" ""
    ```
 
-7. List which files are available for SRA number `SRR3984908`:
+6. List which files are available for SRA number `SRR3984908`:
    ```
    mc ls sra/ftp.era.ebi.ac.uk/vol1/fastq/SRR398/008/SRR3984908
    ```
 
-8. Check the size of these files
+7. Check the size of these files
    ```
    mc du sra/ftp.era.ebi.ac.uk/vol1/fastq/SRR398/008/SRR3984908
    ```
 
-9. Search for SRA run accessions we want to analyse and check the sum of their size
+8. Search for SRA run accessions we want to analyse and check the sum of their size
    (this may take a while to complete):
    ```
    mc find --regex "SRR6439511.*|SRR6439513.*|ERR3277263.*|ERR929737.*|ERR929724.*"  sra/ftp.era.ebi.ac.uk/vol1/fastq  -exec "  mc ls -r --json  {} " \
@@ -82,7 +83,8 @@ Next, we will search for more metagenomic datasets via object storage and scale 
    
    </details>
 
-10. Take a few minutes to investigate other `mc` commands by viewing the `mc` help page with `mc -h`.
+
+9. Take a few minutes to investigate other `mc` commands by viewing the `mc` help page with `mc -h`.
     You can leave the help page by typing `q`. 
 
 ### 3.3 Run commands with more cores and plot your result
